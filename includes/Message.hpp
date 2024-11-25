@@ -6,9 +6,12 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/25 12:16:04 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:40:28 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef MESSAGE_HPP
+#define MESSAGE_HPP
 
 #include "IRC.hpp"
 
@@ -32,6 +35,8 @@ public:
     const std::string& getCommand() const;
     const std::string& getParams() const;
 };
+
+#endif
 
 // class IRCParser {
 // public:

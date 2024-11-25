@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 12:15:36 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/25 13:24:53 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,9 @@ void	Server::setUpServerSocket() {
 	// Escuchar conexiones
 	if (listen(_server_fd, 10) < 0)
 		throw std::runtime_error("Error en listen");
-
-	// Añadir socket servidor a poll
-	struct pollfd server_pollfd = {_server_fd, POLLIN, 0};
-	_pollfds.push_back(server_pollfd);
 }
 
-void	Server::handleNewConnection() {
+void	Server::handleNewConnection(std::vector<struct pollfd> &pollfds) {
 	struct sockaddr_in client_addr;
 	socklen_t client_len = sizeof(client_addr);
 	
@@ -88,7 +84,11 @@ void	Server::handleNewConnection() {
 
 	// Añadir nuevo cliente a poll
 	struct pollfd client_pollfd = {client_fd, POLLIN, 0};
-	_pollfds.push_back(client_pollfd);
+	pollfds.push_back(client_pollfd);
+
+	// Añadir nuevo cliente al map
+	Client newClient(client_fd);
+	_clients.insert(std::make_pair(client_fd, newClient));
 
 	std::cout << "Nueva conexión aceptada" << std::endl;
 }
@@ -107,36 +107,41 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         }
 
         buffer[bytes_read] = '\0';
-        std::cout << "Mensaje recibido: " << buffer << std::endl;
-        // TODO: el procesamiento del mensaje.
-
-		Message newMessage(buffer);
-		std::cout << "command :" << newMessage.getCommand() << std::endl; 
-		std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-		std::cout << "params :" << newMessage.getParams() << std::endl; 
-
-		// int ret = newMessage.handleMessage();
-		// if (ret == -1) {
-		// 	throw x
-		// }
+		_clients[fd].appendToBuffer(buffer);
+    	if (_clients[fd].getBuffer().substr(_clients[fd].getBuffer().size() - 2) == "\r\n") {
+			Message newMessage(_clients[fd].getBuffer());
+			_clients[fd].getBuffer().clear();
+			// if (newMessage.process() == -1) {
+			// 	// gestionar
+			// }
+			std::cout << "command :" << newMessage.getCommand() << std::endl; 
+			std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+			std::cout << "params :" << newMessage.getParams() << std::endl; 
+			
+		}
 }
 
 void Server::start() {
+	std::vector<struct pollfd> pollfds;
+	
+	struct pollfd server_pollfd = {_server_fd, POLLIN, 0};
+	pollfds.push_back(server_pollfd);
+
 	while (true) {
 		// Poll espera eventos en los sockets
-		int ret = poll(_pollfds.data(), _pollfds.size(), -1);
+		int ret = poll(pollfds.data(), pollfds.size(), -1);
 		if (ret < 0)
 			throw std::runtime_error("Error en poll");
 
 		// Revisar todos los file descriptors
-		for (size_t i = 0; i < _pollfds.size(); i++) {
-			if (_pollfds[i].revents & POLLIN) {
-				if (_pollfds[i].fd == _server_fd) {
+		for (size_t i = 0; i < pollfds.size(); i++) {
+			if (pollfds[i].revents & POLLIN) {
+				if (pollfds[i].fd == _server_fd) {
 					// Nueva conexión en el socket servidor
-					handleNewConnection();
+					handleNewConnection(pollfds);
 				} else {
 					// Mensaje de un cliente existente
-					handleClientMessage(_pollfds[i]);
+					handleClientMessage(pollfds[i]);
 				}
 			}
 		}

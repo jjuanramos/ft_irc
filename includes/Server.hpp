@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 11:31:26 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/25 13:05:16 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ private:
     int _server_fd;
     int _port;
     std::string _password;
-    std::vector<struct pollfd> _pollfds;
+    std::map<const int, Client>		_clients;
+	//std::map<std::string, Channel>	_channels;
     static const int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();
@@ -33,7 +34,7 @@ public:
 
 	int	getPort() const;
 	const std::string	&getPassword() const;
-    void handleNewConnection();
+    void handleNewConnection(std::vector<struct pollfd> &pollfds);
     void handleClientMessage(struct pollfd& pfd);
     void start();
 };
