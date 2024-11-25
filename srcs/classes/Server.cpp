@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 11:37:36 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/25 12:15:36 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,17 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 
         buffer[bytes_read] = '\0';
         std::cout << "Mensaje recibido: " << buffer << std::endl;
-        // TODO: el procesamiento del mensaje
+        // TODO: el procesamiento del mensaje.
+
+		Message newMessage(buffer);
+		std::cout << "command :" << newMessage.getCommand() << std::endl; 
+		std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+		std::cout << "params :" << newMessage.getParams() << std::endl; 
+
+		// int ret = newMessage.handleMessage();
+		// if (ret == -1) {
+		// 	throw x
+		// }
 }
 
 void Server::start() {
