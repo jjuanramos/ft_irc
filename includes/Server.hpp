@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 13:05:16 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:21:57 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ private:
     int _port;
     std::string _password;
     std::map<const int, Client>		_clients;
-	//std::map<std::string, Channel>	_channels;
+	std::map<std::string, Channel>	_channels;
     static const int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();

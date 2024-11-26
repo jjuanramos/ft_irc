@@ -21,10 +21,11 @@ public:
     ~Client();
 
     // Getters básicos
-    int         getSocket() const;
-    std::string getNickname() const;
-    std::string getUsername() const;
-    bool        isAuthenticated() const;
+    int const	const	getSocket() const;
+    std::string const	getNickname() const;
+    std::string const	getUsername() const;
+    bool        const	isAuthenticated() const;
+	std::string const 	getBuffer() const;
     
     // Setters básicos
     void        setNickname(const std::string& nickname);
@@ -33,7 +34,7 @@ public:
 
     // Buffer para mensajes parciales
     void        appendToBuffer(const std::string& data);
-    std::string getBuffer() const;
+	void		clearBuffer(void);
 
     // Gestión de canales y operadores
     void        joinChannel(const std::string& channel);

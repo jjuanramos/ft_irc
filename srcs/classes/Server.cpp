@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 13:24:53 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:42:48 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,40 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         }
 
         buffer[bytes_read] = '\0';
-		_clients[fd].appendToBuffer(buffer);
-    	if (_clients[fd].getBuffer().substr(_clients[fd].getBuffer().size() - 2) == "\r\n") {
-			Message newMessage(_clients[fd].getBuffer());
-			_clients[fd].getBuffer().clear();
+		_clients[pfd.fd].appendToBuffer(buffer);
+    	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
+			Message newMessage(_clients[pfd.fd].getBuffer());
+			_clients[pfd.fd].clearBuffer();
+
+			// Muy tocho, poner bonito.
+			switch (newMessage.getParsedCommand())
+			{
+				case IRC::CMD_CAP:
+					break;
+				case IRC::CMD_NICK:
+					break;
+				case IRC::CMD_PASS:
+					break;
+				case IRC::CMD_USER:
+					break;
+				case IRC::CMD_PRIVMSG:
+					break;
+				case IRC::CMD_JOIN:
+					break;
+				case IRC::CMD_INVITE:
+					break;
+				case IRC::CMD_TOPIC:
+					break;
+				case IRC::CMD_MODE:
+					break;
+				case IRC::CMD_KICK:
+					break;
+				case IRC::CMD_QUIT:
+					break;
+				default:
+					break;
+				
+			}
 			// if (newMessage.process() == -1) {
 			// 	// gestionar
 			// }
