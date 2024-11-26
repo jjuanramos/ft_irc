@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 10:42:48 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/26 11:17:27 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,10 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         buffer[bytes_read] = '\0';
 		_clients[pfd.fd].appendToBuffer(buffer);
     	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
+			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
+			// and receiver (channel name)
 			Message newMessage(_clients[pfd.fd].getBuffer());
 			_clients[pfd.fd].clearBuffer();
-
 			// Muy tocho, poner bonito.
 			switch (newMessage.getParsedCommand())
 			{

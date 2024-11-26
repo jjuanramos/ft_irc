@@ -6,29 +6,34 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/26 10:36:07 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/26 11:48:54 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGE_HPP
 #define MESSAGE_HPP
 
-
-
 #include "IRC.hpp"
+
+
+struct CommandData {
+	std::string				_prefix;
+	std::string				_command;
+	std::vector<std::string>	_params;
+};
 
 class Message {
 private:
-    std::string					_prefix;    // Opcional: comienza con ':'
-    std::string					_command;   // Comando IRC
-    std::string 				_params;    // Parámetros del comando
-	IRC::CommandType			_parsedCommand;
+    CommandData			_command;
+	IRC::CommandType	_parsedCommand;
+	int					_senderSocket;
+	std::string			_receiverChannel;
 	
+    Message(void);
 	void parse(const std::string& buffer);
     
 public:
-    Message(void);
-	Message(const std::string &buffer);
+	Message(const Client &client);
 	~Message(void);
 	// Message(const Message &toCopy);
 	// Message &operator=(const &other);
@@ -36,10 +41,10 @@ public:
     // Getters
     const std::string&		getPrefix() const;
     const std::string&		getCommand() const;
-    const std::string&		getParams() const;
+    const std::vector<std::string>& getParams() const;
     const IRC::CommandType	getParsedCommand() const;
 
-	void					parseCommand();
+	void					setReceiver();
 };
 
 #endif

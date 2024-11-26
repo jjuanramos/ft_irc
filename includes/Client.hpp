@@ -10,9 +10,8 @@ private:
     std::string         _username;
     std::string         _buffer;
     bool                _authenticated;
-    std::vector<std::string> _channels;   // Canales a los que está unido
-    std::vector<std::string> _op_channels; // Canales donde es operador
-
+    std::map<const std::string, Channel> _channels;   // Canales a los que está unido
+    std::map<const std::string, Channel> _op_channels; // Canales donde es operador
 public:
     Client(int socket);
     Client(void);
