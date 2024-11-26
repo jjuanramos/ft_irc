@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:07:15 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/26 11:58:43 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/26 11:59:30 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	Message::parse(const std::string& buffer) {
 
 void	Message::setReceiver(void)
 {
-	for (std::vector<std::string>::iterator it = _command._params.begin(); it < _commands._params.end(); it++)
+	for (std::vector<std::string>::iterator it = _command._params.begin(); it < _command._params.end(); it++)
 	{
 		if (!(*it).empty() && (*it).at(0) == '#')
 			_receiverChannel = (*it);
