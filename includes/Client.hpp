@@ -20,7 +20,7 @@ public:
     ~Client();
 
     // Getters básicos
-    int const	const	getSocket() const;
+    int					getSocket() const;
     std::string const	getNickname() const;
     std::string const	getUsername() const;
     bool        const	isAuthenticated() const;
