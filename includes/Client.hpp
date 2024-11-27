@@ -19,6 +19,8 @@ public:
     // Client &operator=(&other);
     ~Client();
 
+    void    cleanup();
+
     // Getters básicos
     int					getSocket() const;
     std::string const	getNickname() const;
@@ -36,16 +38,16 @@ public:
 	void		clearBuffer(void);
 
     // Gestión de canales y operadores
-    void        joinChannel(const std::string& channel);
-    void        leaveChannel(const std::string& channel);
-    bool        isInChannel(const std::string& channel) const;
-    void        setOperatorStatus(const std::string& channel);
-    void        removeOperatorStatus(const std::string& channel);
-    bool        isOperator(const std::string& channel) const;
+    void        joinChannel(const Channel &channel);
+    void        leaveChannel(const Channel &channel);
+    bool        isInChannel(const Channel &channel) const;
+    void        setOperatorStatus(const Channel &channel);
+    //void        removeOperatorStatus(const Channel &channel);
+    //bool        isOperator(const Channel &channel) const;
 
     // Comunicación básica
-    bool        sendMessage(const std::string& message);
-    bool        receiveMessage();
+    //bool        sendMessage(const std::string& message);
+    //bool        receiveMessage();
 };
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 12:16:48 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:06:45 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,11 @@ public:
     
     // Manejo de usuarios
     bool addClient(Client* client, const std::string& password = "");
-    bool removeClient(Client* client);
+    bool removeClient(Client* client); // Nota de Carlos: cuando un cliente se desconecta, debemos retirarlo de
+    // ambos mapas_clients y _operators de cada uno de los canales en los que está. 
+    // La gestión de como se elimina un cliente empieza en Server::deleteClients, que llama a Client::cleanup(), y
+    // que a su vez llama a esta función removeClient(), aún por desarrollar, para cada uno de los canales a los que pertenece
+    // Si permitimos eliminar canales, habrá que hacer algo análogo Client::cleanup() para Channel.
     bool hasClient(Client* client) const;
     
     // Manejo de operadores

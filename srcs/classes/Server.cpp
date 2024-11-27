@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 11:17:27 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/27 15:54:04 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         buffer[bytes_read] = '\0';
 		_clients[pfd.fd].appendToBuffer(buffer);
     	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
-			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
-			// and receiver (channel name)
 			Message newMessage(_clients[pfd.fd].getBuffer());
 			_clients[pfd.fd].clearBuffer();
 			// Muy tocho, poner bonito.
@@ -152,6 +150,20 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 		}
 }
 
+void Server::deleteClients() {
+	std::map<int, Client>::iterator it = _clients.begin();
+
+	while (it != _clients.end()) {
+		if (it->second.getSocket() == -1) {
+			it->second.cleanup();
+			it = _clients.erase(it);
+		}
+		else {
+			++it;
+		}
+	} 
+}
+
 void Server::start() {
 	std::vector<struct pollfd> pollfds;
 	
@@ -176,7 +188,6 @@ void Server::start() {
 				}
 			}
 		}
-
-		// TODO: Eliminar clientes desconectados
+		deleteClients();
 	}
 }

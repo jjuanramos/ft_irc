@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 12:16:48 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/27 15:39:29 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ public:
     void handleNewConnection(std::vector<struct pollfd> &pollfds);
     void handleClientMessage(struct pollfd& pfd);
     void start();
+    void deleteClients();
 };
 
 #endif
