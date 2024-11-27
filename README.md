@@ -6,7 +6,7 @@
 
 ## TODO
 
-### Desarrollador 1: Gestión de Clientes y Autenticación
+### Carlos: Gestión de Clientes y Autenticación
 **Enfoque**: Manejo de conexiones de clientes y toda la lógica de autenticación/registro
 
 1. **Client & Authentication**:
@@ -35,7 +35,7 @@
 - Manejar colisiones de nicknames
 - Generar respuestas según protocolo IRC
 
-### Desarrollador 2: Gestión de Canales y Mensajes
+### Juan: Gestión de Canales y Mensajes
 **Enfoque**: Todo lo relacionado con canales y el envío de mensajes entre usuarios
 
 ```cpp
