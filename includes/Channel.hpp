@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 12:03:04 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:08:34 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ private:
     std::map<int, *Client> _clients;      // Clientes en el canal
     std::map<int, *Client> _operators;    // Operadores (true) y usuarios normales (false)
     size_t _userLimit;                         // Límite de usuarios (para modo l)
+    Channel(&toCopy);
+    Channel &operator=(&other);
+    Channel(void);
 
 public:
     // Constructor y destructor
