@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:54 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 11:03:26 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 16:20:57 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <map>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -24,10 +25,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <cstdlib>
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-#include "Message.hpp"
 
 namespace IRC {
 
@@ -82,5 +79,10 @@ namespace IRC {
     //     CHANNEL_LIMITED    // Canal con límite de usuarios
     // };
 }
+
+#include "Channel.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
+#include "Message.hpp"
 
 #endif

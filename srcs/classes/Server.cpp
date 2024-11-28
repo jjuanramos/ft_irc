@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/27 15:54:04 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:09:47 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         buffer[bytes_read] = '\0';
 		_clients[pfd.fd].appendToBuffer(buffer);
     	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
-			Message newMessage(_clients[pfd.fd].getBuffer());
+			Message newMessage(_clients[pfd.fd]);
 			_clients[pfd.fd].clearBuffer();
 			// Muy tocho, poner bonito.
 			switch (newMessage.getParsedCommand())
@@ -143,9 +143,9 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 			// if (newMessage.process() == -1) {
 			// 	// gestionar
 			// }
-			std::cout << "command :" << newMessage.getCommand() << std::endl; 
-			std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-			std::cout << "params :" << newMessage.getParams() << std::endl; 
+			// std::cout << "command :" << newMessage.getCommand() << std::endl; 
+			// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+			// std::cout << "params :" << newMessage.getParams() << std::endl; 
 			
 		}
 }
@@ -156,7 +156,9 @@ void Server::deleteClients() {
 	while (it != _clients.end()) {
 		if (it->second.getSocket() == -1) {
 			it->second.cleanup();
-			it = _clients.erase(it);
+			std::map<int, Client>::iterator toErase = it;
+			++it;
+			_clients.erase(toErase);
 		}
 		else {
 			++it;

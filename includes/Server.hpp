@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 15:41:15 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:06:04 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ private:
     std::string _password;
     std::map<int, Client>		_clients;
 	std::map<const std::string, Channel>	_channels;
-    static int BUFFER_SIZE = 1024;
+    static const int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();
 	Server(Server &toCopy);

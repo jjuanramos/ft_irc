@@ -6,12 +6,14 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 15:41:56 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:19:42 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
+
+class Client;
 
 #include "IRC.hpp"
 
@@ -21,11 +23,11 @@ private:
     std::string _topic;                        // Topic del canal
     std::string _password;                     // Password (para modo k)
     std::vector<unsigned int> _modes;          // Modos activos (usando ChannelMode)
-    std::map<int, *Client> _clients;      // Clientes en el canal
-    std::map<int, *Client> _operators;    // Operadores (true) y usuarios normales (false)
+    std::map<int, Client*> _clients;      // Clientes en el canal
+    std::map<int, Client*> _operators;    // Operadores (true) y usuarios normales (false)
     size_t _userLimit;                         // Límite de usuarios (para modo l)
-    Channel(&toCopy);
-    Channel &operator=(&other);
+    Channel(Channel &toCopy);
+    Channel &operator=(Channel &other);
     Channel(void);
 
 public:
@@ -52,11 +54,7 @@ public:
     
     // Manejo de usuarios
     bool addClient(Client* client, const std::string& password = "");
-    bool removeClient(Client* client); // Nota de Carlos: cuando un cliente se desconecta, debemos retirarlo de
-    // ambos mapas_clients y _operators de cada uno de los canales en los que está. 
-    // La gestión de como se elimina un cliente empieza en Server::deleteClients, que llama a Client::cleanup(), y
-    // que a su vez llama a esta función removeClient(), aún por desarrollar, para cada uno de los canales a los que pertenece
-    // Si permitimos eliminar canales, habrá que hacer algo análogo Client::cleanup() para Channel.
+    bool removeClient(Client* client);
     bool hasClient(Client* client) const;
     
     // Manejo de operadores

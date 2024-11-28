@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:53:06 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 12:06:56 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 16:22:40 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool Channel::checkPassword(const std::string& pass) const {
 }
 
 bool Channel::setTopic(Client* client, const std::string& newTopic) {
-    if (!isOperator(client) && hasMode(IRC::TOPIC_RESTRICTED)) {
+    if (!isOperator(client) && hasMode(IRC::MODE_T)) { // IRC::TOPIC_RESTRICTED
         return false;
     }
     _topic = newTopic;
@@ -76,7 +76,7 @@ bool Channel::setTopic(Client* client, const std::string& newTopic) {
 
 bool Channel::addClient(Client* client, const std::string& password) {
     if (getUserCount() >= getUserLimit() || 
-        (hasMode(IRC::PASSWORD_PROTECTED) && !checkPassword(password))) {
+        (hasMode(IRC::MODE_K) && !checkPassword(password))) { // IRC::PASSWORD_PROTECTED
         return false;
     }
     _clients.insert(std::make_pair(client->getSocket(), client));

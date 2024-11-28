@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:07:15 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 13:07:32 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 16:18:50 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Message::~Message(void) {}
 const std::string& Message::getPrefix() const { return _command._prefix; }
 const std::string& Message::getCommand() const { return _command._command; }
 const std::vector<std::string>& Message::getParams() const { return _command._params; }
-const IRC::CommandType Message::getParsedCommand() const { return _parsedCommand; }
+IRC::CommandType Message::getParsedCommand() const { return _parsedCommand; }
 
 void	Message::parse(const std::string& buffer) {
     std::string msg = buffer;

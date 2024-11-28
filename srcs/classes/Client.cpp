@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/27 16:56:48 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 16:18:26 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ std::string const Client::getUsername() const { return _username; }
 
 //
 
-bool const	Client::isAuthenticated() const { return _authenticated; }
+bool const	Client::isAuthenticated() { return _authenticated; }
 
 //
 
@@ -65,15 +65,16 @@ void	Client::clearBuffer(void) {
 
 //
 
-void	Client::joinChannel(const Channel &channel) {
+void	Client::joinChannel(const Channel *channel) {
 	if (isInChannel(channel)) {
 		std::cerr << "Client is already on the channel";
 		return ;
 	}
 	_channels.insert(std::make_pair(channel.getName(), Channel));
+	//channel.addClient();
 }
 
-void	Client::leaveChannel(const Channel &channel) {
+void	Client::leaveChannel(const Channel *channel) {
 	if (!isInChannel(channel)) {
 		std::cerr << "Client is not on the channel" << std::endl;
 		return ;
@@ -85,12 +86,13 @@ void	Client::leaveChannel(const Channel &channel) {
 		++it;
 		
 	_channels.erase(it);
+	//channel.removeClient(it);
 	
 	if (isOperator(channel))
 		removeOperatorStatus(channel);
 }
 
-bool	Client::isInChannel(const Channel &channel) const {
+bool	Client::isInChannel(const Channel *channel) const {
 	for (std::map<const std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		if (it->second.getName() == channel.getName())
 			return (true);
@@ -98,10 +100,14 @@ bool	Client::isInChannel(const Channel &channel) const {
 	return (false);
 }
 
-void	Client::setOperatorStatus(const Channel &channel) {
+void	Client::setOperatorStatus(const Channel *channel) {
 	if (!isInChannel(channel)) {
 		// pensar como gestionar errores, como sacar los mensajes etc.
 		std::cerr << "Client is not on the channel" << std::endl;
+		return ;
+	}
+	else if (isOperator(channel)) {
+		std::cerr << "Client is already an operator" << std::endl;
 		return ;
 	}
 	
@@ -110,7 +116,34 @@ void	Client::setOperatorStatus(const Channel &channel) {
 	while (it->second.getName() != channel.getName()) 
 		++it;
 
+	//channel.addOperator(it->second);
 	_op_channels.insert(std::make_pair(channel.getName(), Channel));
+}
+
+void	Client::removeOperatorStatus(const Channel *channel) {
+	if (!isInChannel(channel)) {
+		std::cerr << "Client is not on the channel" << std::endl;
+		return ;
+	}
+	else if (!isOperator(channel)) {
+		std::cerr << "Client is not an operator" << std::endl;
+		return ;
+	}
+
+	std::map<const std::string, Channel>::iterator it = _op_channels.begin();
+	while (it->second.getName() != channel.getName()) l
+		++it;
+	
+	//channel.removeOperator(it->second);
+	_op_channels.erase(it);
+}
+
+bool	Client::isOperator(const Channel *channel) {
+	for (std::map<const std::string, Channel>::iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
+		if (it->second.getName() == channel.getName())
+			return (true);
+	}
+	return (false);
 }
 
 //
@@ -125,4 +158,8 @@ void	Client::cleanup() {
 		it->second.removeClient(*this);
 	}
 	_op_channels.clear();
+}
+
+bool	Client::operator==(Client &other) {
+	return (_nickname == other.getNickname())
 }
