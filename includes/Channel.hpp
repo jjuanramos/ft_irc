@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 12:16:48 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 12:03:04 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ private:
     std::string _topic;                        // Topic del canal
     std::string _password;                     // Password (para modo k)
     std::vector<unsigned int> _modes;          // Modos activos (usando ChannelMode)
-    std::map<int, Client> _clients;      // Clientes en el canal
-    std::map<int, Client> _operators;    // Operadores (true) y usuarios normales (false)
+    std::map<int, *Client> _clients;      // Clientes en el canal
+    std::map<int, *Client> _operators;    // Operadores (true) y usuarios normales (false)
     size_t _userLimit;                         // Límite de usuarios (para modo l)
 
 public:
@@ -53,8 +53,8 @@ public:
     bool hasClient(Client* client) const;
     
     // Manejo de operadores
-    void addOperator(Client* client);
-    void removeOperator(Client* client);
+    bool addOperator(Client* client);
+    bool removeOperator(Client* client);
     
     // Comandos de operador (requeridos por el subject)
     bool kickClient(Client* operator_client, Client* target, const std::string& reason = "");
@@ -75,11 +75,5 @@ private:
     Channel(const Channel& other);
     Channel& operator=(const Channel& other);
 };
-
-// Implementaciones inline de getters simples
-inline const std::string& Channel::getName() const { return _name; }
-inline const std::string& Channel::getTopic() const { return _topic; }
-inline size_t Channel::getUserCount() const { return _clients.size(); }
-inline size_t Channel::getUserLimit() const { return _userLimit; }
 
 #endif
