@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 13:08:52 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:21:40 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ private:
     std::string _password;
     std::map<int, Client>		_clients;
 	std::map<const std::string, Channel>	_channels;
-    static int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();
 	Server(Server &toCopy);

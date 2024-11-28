@@ -12,10 +12,10 @@ private:
     bool                _authenticated;
     std::map<const std::string, Channel> _channels;   // Canales a los que está unido
     std::map<const std::string, Channel> _op_channels; // Canales donde es operador
-    Client(&toCopy);
-    Client &operator=(&other);
 public:
     Client(int socket);
+    Client(const Client& other);
+    Client& operator=(const Client& other);
     Client(void);
     ~Client();
 
@@ -23,7 +23,7 @@ public:
     int					getSocket() const;
     std::string const	getNickname() const;
     std::string const	getUsername() const;
-    bool        const	isAuthenticated() const;
+    bool				isAuthenticated() const;
 	std::string const 	getBuffer() const;
     
     // Setters básicos

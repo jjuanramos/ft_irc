@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 11:17:27 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:21:03 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void Server::handleClientMessage(struct pollfd& pfd) {
     	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
 			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
 			// and receiver (channel name)
-			Message newMessage(_clients[pfd.fd].getBuffer());
+			Message newMessage(_clients[pfd.fd]);
 			_clients[pfd.fd].clearBuffer();
 			// Muy tocho, poner bonito.
 			switch (newMessage.getParsedCommand())
@@ -147,7 +147,7 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 			// }
 			std::cout << "command :" << newMessage.getCommand() << std::endl; 
 			std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-			std::cout << "params :" << newMessage.getParams() << std::endl; 
+			// std::cout << "params :" << newMessage.getParams() << std::endl; 
 			
 		}
 }

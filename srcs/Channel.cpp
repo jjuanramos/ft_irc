@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:53:06 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 12:06:56 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:29:10 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool Channel::checkPassword(const std::string& pass) const {
 }
 
 bool Channel::setTopic(Client* client, const std::string& newTopic) {
-    if (!isOperator(client) && hasMode(IRC::TOPIC_RESTRICTED)) {
+    if (!isOperator(client) && hasMode(IRC::MODE_T)) {
         return false;
     }
     _topic = newTopic;
@@ -76,7 +76,7 @@ bool Channel::setTopic(Client* client, const std::string& newTopic) {
 
 bool Channel::addClient(Client* client, const std::string& password) {
     if (getUserCount() >= getUserLimit() || 
-        (hasMode(IRC::PASSWORD_PROTECTED) && !checkPassword(password))) {
+        (hasMode(IRC::MODE_K) && !checkPassword(password))) {
         return false;
     }
     _clients.insert(std::make_pair(client->getSocket(), client));
@@ -167,18 +167,14 @@ void Channel::sendNames(Client* client) const {
 }
 
 bool Channel::canModifyTopic(Client* client) const {
-    return isOperator(client) || !hasMode(IRC::TOPIC_RESTRICTED);
+    return isOperator(client) || !hasMode(IRC::MODE_T);
 }
 
 bool Channel::isInviteOnly() const {
-    return hasMode(IRC::INVITE_ONLY);
+    return hasMode(IRC::MODE_I);
 }
 
-bool Channel::isClientBanned(Client* client) const {
-    return hasMode(IRC::BAN_PROTECTED) && _bannedClients.find(client->getNickname()) != _bannedClients.end();
-}
-
-bool Channel::notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param) {
+void Channel::notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param) {
     std::string modeStr;
     std::string message;
 
@@ -204,13 +200,4 @@ bool Channel::notifyModeChange(Client* changer, char mode, bool enabled, const s
         message += param;
     }
     broadcastMessage(message);
-    return true;
 }
-
-
-
-// Implementaciones de getters simples
-const std::string& Channel::getName() const { return _name; }
-const std::string& Channel::getTopic() const { return _topic; }
-size_t Channel::getUserCount() const { return _clients.size(); }
-size_t Channel::getUserLimit() const { return _userLimit; }

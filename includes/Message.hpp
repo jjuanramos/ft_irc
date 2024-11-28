@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 13:07:55 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:23:51 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define MESSAGE_HPP
 
 #include "IRC.hpp"
-
+#include "IRCTypes.hpp"
 
 struct CommandData {
 	std::string				_prefix;
@@ -29,9 +29,9 @@ private:
 	int					_senderSocket;
 	std::string			_receiverChannel;
 	
-    Message(void);
+    // Message(void);
 	Message(const Message &toCopy);
-	Message &operator=(const &other);
+	Message &operator=(const Message &other);
 	void parse(const std::string& buffer);
     
 public:
@@ -42,7 +42,7 @@ public:
     const std::string&		getPrefix() const;
     const std::string&		getCommand() const;
     const std::vector<std::string>& getParams() const;
-    const IRC::CommandType	getParsedCommand() const;
+    IRC::CommandType		getParsedCommand() const;
 
 	void					setReceiver();
 };

@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/26 10:15:03 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/28 13:25:28 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ Client::Client(): _socket(-1), _nickname(""),
 
 Client::~Client() {}
 
-int const	Client::getSocket() const { return _socket; }
+int	Client::getSocket() const { return _socket; }
 
 std::string const Client::getNickname() const { return _nickname; }
 
 std::string const Client::getUsername() const { return _username; }
 
-bool const	Client::isAuthenticated() const { return _authenticated; }
+bool Client::isAuthenticated() const { return _authenticated; }
 
 void        Client::setNickname(const std::string& nickname) {
 	_nickname = nickname;
