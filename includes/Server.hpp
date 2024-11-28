@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/27 15:39:29 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 15:41:15 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ private:
     static int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();
+	Server(Server &toCopy);
+	Server	&operator=(Server &other);
 public:
 	Server(void);
     Server(int port, const std::string& password);
-	// Server(Server &toCopy);
-	// Server	&operator=(Server &other);
     ~Server();
 
 	int	getPort() const;
