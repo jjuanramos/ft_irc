@@ -6,15 +6,15 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:07:15 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 16:18:50 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:15:53 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-Message::Message(const Client &client) {
-	_senderSocket = client.getSocket();
-	parse(client.getBuffer());
+Message::Message(const Client *client) {
+	_senderSocket = client->getSocket();
+	parse(client->getBuffer());
 	setReceiver();
 }
 

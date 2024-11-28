@@ -12,17 +12,18 @@ private:
     std::string         _username;
     std::string         _buffer;
     bool                _authenticated;
+    const unsigned int  _id;
     std::map<const std::string, Channel*> _channels;   // Canales a los que está unido
     std::map<const std::string, Channel*> _op_channels; // Canales donde es operador
-    Client(&toCopy);
-    Client &operator=(Client &other);
+    Client(void);
 
 public:
-    Client(int socket);
-    Client(void);
+    Client(int socket, unsigned int id);
+    Client(Client &toCopy);
     ~Client();
 
     void    cleanup();
+    //Client &operator=(Client &other);
     Client operator==(Client &other);
 
     // Getters básicos
@@ -31,6 +32,7 @@ public:
     std::string const	getUsername() const;
     bool                isAuthenticated() const;
 	std::string const 	getBuffer() const;
+    std::string const 	getId() const;
     
     // Setters básicos
     void        setNickname(const std::string& nickname);
@@ -50,7 +52,7 @@ public:
     bool        isOperator(const Channel *channel) const;
 
     // Comunicación básica
-    //bool        sendMessage(const std::string& message);
+    bool        sendMessage(const std::string& message);
     //bool        receiveMessage();
 };
 

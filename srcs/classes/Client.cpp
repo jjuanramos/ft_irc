@@ -6,13 +6,13 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 16:18:26 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:09:03 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-Client::Client(int socket): _socket(socket), _nickname(""),
+Client::Client(int socket, int id): _socket(socket), _id(id), _nickname(""),
 	_username(""), _buffer(""), _authenticated(false) {}
 
 Client::Client(): _socket(-1), _nickname(""),
@@ -22,6 +22,17 @@ Client::~Client() {
 	close(_socket);
 }
 
+Client::Client(const Client &toCopy)
+    : _socket(toCopy._socket),
+      _nickname(toCopy._nickname),
+      _username(toCopy._username),
+      _buffer(toCopy._buffer),
+      _authenticated(toCopy._authenticated),
+      _id(toCopy._id), // Initialize const member
+      _channels(toCopy._channels), // Copy map of channels
+      _op_channels(toCopy._op_channels) // Copy map of op channels
+{}
+
 //
 
 int const	Client::getSocket() const { return _socket; }
@@ -29,6 +40,8 @@ int const	Client::getSocket() const { return _socket; }
 std::string const Client::getNickname() const { return _nickname; }
 
 std::string const Client::getUsername() const { return _username; }
+
+unsigned int const Client::getId() const { return _id; }
 
 //
 
@@ -70,7 +83,7 @@ void	Client::joinChannel(const Channel *channel) {
 		std::cerr << "Client is already on the channel";
 		return ;
 	}
-	_channels.insert(std::make_pair(channel.getName(), Channel));
+	_channels.insert(std::make_pair(channel.getName(), channel));
 	//channel.addClient();
 }
 
@@ -117,7 +130,7 @@ void	Client::setOperatorStatus(const Channel *channel) {
 		++it;
 
 	//channel.addOperator(it->second);
-	_op_channels.insert(std::make_pair(channel.getName(), Channel));
+	_op_channels.insert(std::make_pair(channel.getName(), channel));
 }
 
 void	Client::removeOperatorStatus(const Channel *channel) {
@@ -148,6 +161,12 @@ bool	Client::isOperator(const Channel *channel) {
 
 //
 
+bool	Client::sendMessage(const std::string& message) { // Basic implementation, review
+	std::cout << _nickname << ": " << message << std::endl;
+}
+
+//
+
 void	Client::cleanup() {
 	for (std::map<const std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		it->second.removeClient(*this);
@@ -161,5 +180,5 @@ void	Client::cleanup() {
 }
 
 bool	Client::operator==(Client &other) {
-	return (_nickname == other.getNickname())
+	return (_id == other.getId())
 }

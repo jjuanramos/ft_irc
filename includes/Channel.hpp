@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 16:19:42 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:19:00 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ private:
     std::string _topic;                        // Topic del canal
     std::string _password;                     // Password (para modo k)
     std::vector<unsigned int> _modes;          // Modos activos (usando ChannelMode)
-    std::map<int, Client*> _clients;      // Clientes en el canal
-    std::map<int, Client*> _operators;    // Operadores (true) y usuarios normales (false)
+    std::map<unsigned int, Client*> _clients;      // Clientes en el canal
+    std::map<unsigned int, Client*> _operators;    // Operadores (true) y usuarios normales (false)
     size_t _userLimit;                         // Límite de usuarios (para modo l)
     Channel(Channel &toCopy);
     Channel &operator=(Channel &other);
@@ -74,7 +74,7 @@ private:
     bool canModifyTopic(Client* client) const;
     bool isInviteOnly() const;
     bool isClientBanned(Client* client) const;
-    void notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param = "");
+    bool notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param = "");
 
     // Prohibir copia
     Channel(const Channel& other);

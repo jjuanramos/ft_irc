@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 16:06:18 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/28 17:14:39 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ private:
 	void parse(const std::string& buffer);
     
 public:
-	Message(const Client &client);
+	Message(const Client *client);
 	~Message(void);
     
     // Getters
