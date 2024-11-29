@@ -13,8 +13,8 @@ private:
     std::string         _buffer;
     bool                _authenticated;
     unsigned int        _id;
-    std::map<const std::string, Channel> _channels;   // Canales a los que está unido
-    std::map<const std::string, Channel> _op_channels; // Canales donde es operador
+    std::map<const std::string, Channel*> _channels;   // Canales a los que está unido
+    std::map<const std::string, Channel*> _op_channels; // Canales donde es operador
     Client(const Client& other);
     Client& operator=(const Client& other);
     Client(void);

@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:31:14 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:38:57 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,6 @@ Client::Client(const Client &toCopy)
       _channels(toCopy._channels), // Copy map of channels
       _op_channels(toCopy._op_channels) // Copy map of op channels
 {}
-
-//
-
-int	Client::getSocket() const { return _socket; }
 
 std::string const	Client::getNickname() const { return _nickname; }
 
@@ -69,7 +65,7 @@ void	Client::appendToBuffer(const std::string& data)
 	_buffer.append(data);
 }
 
-std::string	Client::getBuffer() const {
+std::string const	Client::getBuffer() const {
 	return _buffer;
 }
 
@@ -84,7 +80,7 @@ void	Client::joinChannel(Channel *channel) {
 		std::cerr << "Client is already on the channel";
 		return ;
 	}
-	_channels.insert(std::make_pair(channel->getName(), *channel));
+	_channels.insert(std::make_pair(channel->getName(), channel));
 	//channel.addClient();
 }
 
@@ -131,7 +127,7 @@ void	Client::setOperatorStatus(Channel *channel) {
 		++it;
 
 	//channel.addOperator(it->second);
-	_op_channels.insert(std::make_pair(channel->getName(), *channel));
+	_op_channels.insert(std::make_pair(channel->getName(), channel));
 }
 
 void	Client::removeOperatorStatus(const Channel *channel) {
@@ -144,7 +140,7 @@ void	Client::removeOperatorStatus(const Channel *channel) {
 		return ;
 	}
 
-	std::map<unsigned int, Channel*>::iterator it = _op_channels.begin();
+	std::map<std::string, Channel*>::iterator it = _op_channels.begin();
 	while (it->second->getName() != channel->getName())
 		++it;
 	
@@ -153,7 +149,7 @@ void	Client::removeOperatorStatus(const Channel *channel) {
 }
 
 bool	Client::isOperator(const Channel *channel) const {
-	for (std::map<unsigned int, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
+	for (std::map<std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
 		if (it->second->getName() == channel->getName())
 			return (true);
 	}
@@ -170,12 +166,12 @@ bool	Client::sendMessage(const std::string& message) { // Basic implementation, 
 //
 
 void	Client::cleanup() {
-	for (std::map<unsigned int, Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
+	for (std::map<std::string, Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		it->second->removeClient(this);
 	}
 	_channels.clear();
 
-	for (std::map<unsigned int, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
+	for (std::map<std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
 		it->second->removeClient(this);
 	}
 	_op_channels.clear();
