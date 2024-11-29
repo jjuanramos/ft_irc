@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:54 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 13:29:28 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:20:27 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <map>
 #include <sys/socket.h>
 #include <netinet/in.h>

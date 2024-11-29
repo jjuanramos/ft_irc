@@ -6,7 +6,7 @@
 #    By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/25 10:27:14 by juramos           #+#    #+#              #
-#    Updated: 2024/11/28 13:33:58 by juramos          ###   ########.fr        #
+#    Updated: 2024/11/29 11:14:08 by juramos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 FOLDER = srcs/
 OBJFOLDER = obj/
 INCLUDES = includes/
-SRCS = main.cpp classes/Server.cpp classes/Message.cpp classes/Client.cpp classes/Channel.cpp
+SRCS = main.cpp classes/Server.cpp classes/Message.cpp classes/Channel.cpp classes/Client.cpp
 OBJS = $(SRCS:%.cpp=$(OBJFOLDER)%.o)
 
 $(OBJFOLDER)%.o: $(FOLDER)%.cpp

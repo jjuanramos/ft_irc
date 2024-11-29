@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 13:21:03 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:21:41 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,13 @@ void	Server::handleNewConnection(std::vector<struct pollfd> &pollfds) {
 	pollfds.push_back(client_pollfd);
 
 	// Añadir nuevo cliente al map
-	Client newClient(client_fd);
-	_clients.insert(std::make_pair(client_fd, newClient));
-
+	static int id = 1;
+	_clients[id] = new Client(client_fd, id); // Rarete, revisar y ver que esta pasando con la memoria
+	// Revisar tmb como queremos gestionar cada objeto cliente (el mismo objeto, con la misma dir. de memoria tanto en server como en channel?) 
+	
+	//_clients.insert(std::pair<int, Client>(id, Client(client_fd, id)));
+	id++;
+		
 	std::cout << "Nueva conexión aceptada" << std::endl;
 }
 
@@ -107,12 +111,12 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         }
 
         buffer[bytes_read] = '\0';
-		_clients[pfd.fd].appendToBuffer(buffer);
-    	if (_clients[pfd.fd].getBuffer().substr(_clients[pfd.fd].getBuffer().size() - 2) == "\r\n") {
+		_clients[pfd.fd]->appendToBuffer(buffer);
+    	if (_clients[pfd.fd]->getBuffer().substr(_clients[pfd.fd]->getBuffer().size() - 2) == "\r\n") {
 			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
 			// and receiver (channel name)
 			Message newMessage(_clients[pfd.fd]);
-			_clients[pfd.fd].clearBuffer();
+			_clients[pfd.fd]->clearBuffer();
 			// Muy tocho, poner bonito.
 			switch (newMessage.getParsedCommand())
 			{
@@ -145,11 +149,27 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 			// if (newMessage.process() == -1) {
 			// 	// gestionar
 			// }
-			std::cout << "command :" << newMessage.getCommand() << std::endl; 
-			std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+			// std::cout << "command :" << newMessage.getCommand() << std::endl; 
+			// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
 			// std::cout << "params :" << newMessage.getParams() << std::endl; 
 			
 		}
+}
+
+void Server::deleteClients() {
+	std::map<unsigned int, Client*>::iterator it = _clients.begin();
+
+	while (it != _clients.end()) {
+		if (it->second->getSocket() == -1) {
+			it->second->cleanup();
+			std::map<unsigned int, Client*>::iterator toErase = it;
+			++it;
+			_clients.erase(toErase);
+		}
+		else {
+			++it;
+		}
+	} 
 }
 
 void Server::start() {
@@ -176,7 +196,6 @@ void Server::start() {
 				}
 			}
 		}
-
-		// TODO: Eliminar clientes desconectados
+		deleteClients();
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 13:23:51 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:19:39 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ private:
 	void parse(const std::string& buffer);
     
 public:
-	Message(const Client &client);
+	Message(const Client *client);
 	~Message(void);
     
     // Getters

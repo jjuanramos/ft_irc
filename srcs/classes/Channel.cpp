@@ -6,15 +6,15 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:53:06 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 13:29:10 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:19:18 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
-Channel::Channel(const std::string& name, Client* creator) : _name(name), _userLimit(0) {
-    _clients.insert(std::make_pair(creator->getSocket(), creator));
-    _operators.insert(std::make_pair(creator->getSocket(), creator));
+Channel::Channel(const std::string& name, Client* creator) : _name(name), _userLimit(0) { // Cambio getSocket() por getId(), expliación en Server.hpp
+    _clients.insert(std::make_pair(creator->getId(), creator));
+    _operators.insert(std::make_pair(creator->getId(), creator));
 }
 
 Channel::~Channel() {
@@ -37,7 +37,7 @@ size_t Channel::getUserLimit() const {
 }
 
 bool Channel::isOperator(Client* client) const {
-    std::map<int, Client*>::const_iterator it = _operators.find(client->getSocket());
+    std::map<unsigned int, Client*>::const_iterator it = _operators.find(client->getId());
     return it != _operators.end();
 }
 
@@ -67,7 +67,7 @@ bool Channel::checkPassword(const std::string& pass) const {
 }
 
 bool Channel::setTopic(Client* client, const std::string& newTopic) {
-    if (!isOperator(client) && hasMode(IRC::MODE_T)) {
+    if (!isOperator(client) && hasMode(IRC::MODE_T)) { // IRC::TOPIC_RESTRICTED
         return false;
     }
     _topic = newTopic;
@@ -79,12 +79,12 @@ bool Channel::addClient(Client* client, const std::string& password) {
         (hasMode(IRC::MODE_K) && !checkPassword(password))) {
         return false;
     }
-    _clients.insert(std::make_pair(client->getSocket(), client));
+    _clients.insert(std::make_pair(client->getId(), client));
     return true;
 }
 
 bool Channel::removeClient(Client* client) {
-    std::map<int, Client*>::iterator it = _clients.find(client->getSocket());
+    std::map<unsigned int, Client*>::iterator it = _clients.find(client->getId());
     if (it != _clients.end()) {
         _clients.erase(it);
         return true;
@@ -93,19 +93,19 @@ bool Channel::removeClient(Client* client) {
 }
 
 bool Channel::hasClient(Client* client) const {
-    return _clients.find(client->getSocket()) != _clients.end();
+    return _clients.find(client->getId()) != _clients.end();
 }
 
 bool Channel::addOperator(Client* client) {
     if (getUserCount() >= getUserLimit()) {
         return false;
     }
-    _operators.insert(std::make_pair(client->getSocket(), client));
+    _operators.insert(std::make_pair(client->getId(), client));
     return true;
 }
 
 bool Channel::removeOperator(Client* client) {
-    std::map<int, Client*>::iterator it = _operators.find(client->getSocket());
+    std::map<unsigned int, Client*>::iterator it = _operators.find(client->getId());
     if (it != _operators.end()) {
         _operators.erase(it);
         return true;
@@ -131,7 +131,7 @@ bool Channel::inviteClient(Client* operator_client, Client* target) {
 }
 
 void Channel::broadcastMessage(const std::string& message, Client* exclude) {
-    std::map<int, Client*>::iterator it;
+    std::map<unsigned int, Client*>::iterator it;
     for (it = _clients.begin(); it != _clients.end(); ++it) {
         if (it->second != exclude) {
             it->second->sendMessage(message);
@@ -141,7 +141,7 @@ void Channel::broadcastMessage(const std::string& message, Client* exclude) {
 
 void Channel::sendNames(Client* client) const {
     std::string namesList;
-    std::map<int, Client*>::const_iterator it;
+    std::map<unsigned int, Client*>::const_iterator it;
     
     for (it = _clients.begin(); it != _clients.end(); ++it) {
         if (isOperator(it->second))
