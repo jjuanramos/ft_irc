@@ -1,6 +1,8 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+class Channel;
+
 #include "IRC.hpp"
 
 class Client {
@@ -10,21 +12,27 @@ private:
     std::string         _username;
     std::string         _buffer;
     bool                _authenticated;
-    std::map<const std::string, Channel> _channels;   // Canales a los que está unido
-    std::map<const std::string, Channel> _op_channels; // Canales donde es operador
-    Client(&toCopy);
-    Client &operator=(&other);
-public:
-    Client(int socket);
+    unsigned int  _id;
+    std::map<const std::string, Channel*> _channels;   // Canales a los que está unido
+    std::map<const std::string, Channel*> _op_channels; // Canales donde es operador
     Client(void);
+
+public:
+    Client(int socket, unsigned int id);
+    Client(const Client &toCopy);
     ~Client();
+
+    void    cleanup();
+    //Client &operator=(Client &other);
+    bool operator==(Client &other);
 
     // Getters básicos
     int					getSocket() const;
-    std::string const	getNickname() const;
-    std::string const	getUsername() const;
-    bool        const	isAuthenticated() const;
-	std::string const 	getBuffer() const;
+    std::string         getNickname() const;
+    std::string         getUsername() const;
+    bool                isAuthenticated() const;
+	std::string         getBuffer() const;
+    unsigned int        getId() const;
     
     // Setters básicos
     void        setNickname(const std::string& nickname);
@@ -36,16 +44,16 @@ public:
 	void		clearBuffer(void);
 
     // Gestión de canales y operadores
-    void        joinChannel(const std::string& channel);
-    void        leaveChannel(const std::string& channel);
-    bool        isInChannel(const std::string& channel) const;
-    void        setOperatorStatus(const std::string& channel);
-    void        removeOperatorStatus(const std::string& channel);
-    bool        isOperator(const std::string& channel) const;
+    void        joinChannel(Channel *channel);
+    void        leaveChannel(const Channel *channel);
+    bool        isInChannel(const Channel *channel) const;
+    void        setOperatorStatus(Channel *channel);
+    void        removeOperatorStatus(const Channel *channel);
+    bool        isOperator(const Channel *channel) const;
 
     // Comunicación básica
     bool        sendMessage(const std::string& message);
-    bool        receiveMessage();
+    //bool        receiveMessage();
 };
 
 #endif
