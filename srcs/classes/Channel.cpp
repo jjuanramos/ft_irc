@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:53:06 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 17:21:47 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 09:42:34 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ bool Channel::inviteClient(Client* operator_client, Client* target) {
 }
 
 void Channel::broadcastMessage(const std::string& message, Client* exclude) {
-    std::map<int, Client*>::iterator it;
+    std::map<unsigned int, Client*>::iterator it;
     for (it = _clients.begin(); it != _clients.end(); ++it) {
         if (it->second != exclude) {
             it->second->sendMessage(message);

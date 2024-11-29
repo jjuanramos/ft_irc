@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:54 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 16:29:09 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 09:09:14 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ namespace IRC {
     // };
 }
 
-#include "Channel.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "Server.hpp"
 #include "Message.hpp"
 

@@ -12,27 +12,27 @@ private:
     std::string         _username;
     std::string         _buffer;
     bool                _authenticated;
-    const unsigned int  _id;
+    unsigned int  _id;
     std::map<const std::string, Channel*> _channels;   // Canales a los que está unido
     std::map<const std::string, Channel*> _op_channels; // Canales donde es operador
     Client(void);
 
 public:
     Client(int socket, unsigned int id);
-    Client(Client &toCopy);
+    Client(const Client &toCopy);
     ~Client();
 
     void    cleanup();
     //Client &operator=(Client &other);
-    Client operator==(Client &other);
+    bool operator==(Client &other);
 
     // Getters básicos
     int					getSocket() const;
-    std::string const	getNickname() const;
-    std::string const	getUsername() const;
+    std::string         getNickname() const;
+    std::string         getUsername() const;
     bool                isAuthenticated() const;
-	std::string const 	getBuffer() const;
-    std::string const 	getId() const;
+	std::string         getBuffer() const;
+    unsigned int        getId() const;
     
     // Setters básicos
     void        setNickname(const std::string& nickname);
@@ -44,10 +44,10 @@ public:
 	void		clearBuffer(void);
 
     // Gestión de canales y operadores
-    void        joinChannel(const Channel *channel);
+    void        joinChannel(Channel *channel);
     void        leaveChannel(const Channel *channel);
     bool        isInChannel(const Channel *channel) const;
-    void        setOperatorStatus(const Channel *channel);
+    void        setOperatorStatus(Channel *channel);
     void        removeOperatorStatus(const Channel *channel);
     bool        isOperator(const Channel *channel) const;
 
