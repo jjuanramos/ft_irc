@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 17:19:06 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:19:29 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ private:
     std::string _password;
     std::map<unsigned int, Client*>		_clients; // _client_fd no es único, puesto que cuando se desconecta se setea a -1. Se crea una variable _id dentro de Client, inicializada solo desde Server y que asegura que sea única
 	std::map<const std::string, Channel>	_channels;
-    static const int BUFFER_SIZE = 1024;
     
     void setUpServerSocket();
 	Server(Server &toCopy);

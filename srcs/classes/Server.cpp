@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 17:19:38 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:21:41 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         buffer[bytes_read] = '\0';
 		_clients[pfd.fd]->appendToBuffer(buffer);
     	if (_clients[pfd.fd]->getBuffer().substr(_clients[pfd.fd]->getBuffer().size() - 2) == "\r\n") {
+			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
+			// and receiver (channel name)
 			Message newMessage(_clients[pfd.fd]);
 			_clients[pfd.fd]->clearBuffer();
 			// Muy tocho, poner bonito.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 09:46:33 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:41:08 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ Client::~Client() {
 	close(_socket);
 }
 
+int	Client::getSocket() const { return _socket; }
+
 Client::Client(const Client &toCopy)
     : _socket(toCopy._socket),
       _nickname(toCopy._nickname),
@@ -33,18 +35,13 @@ Client::Client(const Client &toCopy)
       _op_channels(toCopy._op_channels) // Copy map of op channels
 {}
 
-//
+std::string const	Client::getNickname() const { return _nickname; }
 
-int	Client::getSocket() const { return _socket; }
-
-std::string	Client::getNickname() const { return _nickname; }
-
-std::string	Client::getUsername() const { return _username; }
+std::string const	Client::getUsername() const { return _username; }
 
 unsigned int	Client::getId() const { return _id; }
 
 //
-
 bool	Client::isAuthenticated() const { return _authenticated; }
 
 //
@@ -68,7 +65,7 @@ void	Client::appendToBuffer(const std::string& data)
 	_buffer.append(data);
 }
 
-std::string	Client::getBuffer() const {
+std::string const	Client::getBuffer() const {
 	return _buffer;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:44:00 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 09:42:15 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:41:34 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 class Client;
 
 #include "IRC.hpp"
+#include "IRCTypes.hpp"
+
+class Client;
 
 class Channel {
 private:
@@ -26,9 +29,13 @@ private:
     std::map<unsigned int, Client*> _clients;      // Clientes en el canal
     std::map<unsigned int, Client*> _operators;    // Operadores (true) y usuarios normales (false)
     size_t _userLimit;                         // Límite de usuarios (para modo l)
-    Channel(Channel &toCopy);
-    Channel &operator=(Channel &other);
+    Channel(const Channel& other);
+    Channel& operator=(const Channel& other);
     Channel(void);
+    // Métodos auxiliares
+    bool canModifyTopic(Client* client) const;
+    bool isInviteOnly() const;
+    void notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param = "");
 
 public:
     // Constructor y destructor
@@ -68,17 +75,6 @@ public:
     // Mensajes
     void broadcastMessage(const std::string& message, Client* exclude = NULL);
     void sendNames(Client* client) const;
-
-private:
-    // Métodos auxiliares
-    bool canModifyTopic(Client* client) const;
-    bool isInviteOnly() const;
-    bool isClientBanned(Client* client) const;
-    bool notifyModeChange(Client* changer, char mode, bool enabled, const std::string& param = "");
-
-    // Prohibir copia
-    Channel(const Channel& other);
-    Channel& operator=(const Channel& other);
 };
 
 #endif

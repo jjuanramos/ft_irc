@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/28 17:14:39 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:19:39 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define MESSAGE_HPP
 
 #include "IRC.hpp"
-
+#include "IRCTypes.hpp"
 
 struct CommandData {
 	std::string				_prefix;
@@ -29,7 +29,7 @@ private:
 	int					_senderSocket;
 	std::string			_receiverChannel;
 	
-    Message(void);
+    // Message(void);
 	Message(const Message &toCopy);
 	Message &operator=(const Message &other);
 	void parse(const std::string& buffer);
@@ -42,7 +42,7 @@ public:
     const std::string&		getPrefix() const;
     const std::string&		getCommand() const;
     const std::vector<std::string>& getParams() const;
-    IRC::CommandType	getParsedCommand() const;
+    IRC::CommandType		getParsedCommand() const;
 
 	void					setReceiver();
 };
