@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:38:57 by juramos          ###   ########.fr       */
+/*   Updated: 2024/11/29 11:41:08 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	Client::removeOperatorStatus(const Channel *channel) {
 		return ;
 	}
 
-	std::map<std::string, Channel*>::iterator it = _op_channels.begin();
+	std::map<const std::string, Channel*>::iterator it = _op_channels.begin();
 	while (it->second->getName() != channel->getName())
 		++it;
 	
@@ -149,7 +149,7 @@ void	Client::removeOperatorStatus(const Channel *channel) {
 }
 
 bool	Client::isOperator(const Channel *channel) const {
-	for (std::map<std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
+	for (std::map<const std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
 		if (it->second->getName() == channel->getName())
 			return (true);
 	}
@@ -166,12 +166,12 @@ bool	Client::sendMessage(const std::string& message) { // Basic implementation, 
 //
 
 void	Client::cleanup() {
-	for (std::map<std::string, Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
+	for (std::map<const std::string, Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		it->second->removeClient(this);
 	}
 	_channels.clear();
 
-	for (std::map<std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
+	for (std::map<const std::string, Channel*>::const_iterator it = _op_channels.begin(); it != _op_channels.end(); ++it) {
 		it->second->removeClient(this);
 	}
 	_op_channels.clear();
