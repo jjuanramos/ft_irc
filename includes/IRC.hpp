@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:54 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:20:27 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 15:59:58 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class Client;
 class Server;
 class Message;
 
-static int BUFFER_SIZE = 1024;
+const static int BUFFER_SIZE = 1024;
 static std::string SERVER_NAME = "irc.localhost";
 
 #endif

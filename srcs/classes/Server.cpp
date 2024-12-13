@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:21:41 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 16:17:45 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ const std::string	&Server::getPassword() const { return _password; }
 
 Server::~Server() {
 	close(_server_fd);
+}
+
+unsigned int Server::fetchClientIdFromPid(int fd) {
+	for (int i = 1; _clients[i]; i++)
+		if (_clients[i]->getSocket() == fd)
+			return (_clients[i]->getId());
+	return (-1);
 }
 
 void	Server::setUpServerSocket() {
@@ -89,7 +96,7 @@ void	Server::handleNewConnection(std::vector<struct pollfd> &pollfds) {
 	// Añadir nuevo cliente al map
 	static int id = 1;
 	_clients[id] = new Client(client_fd, id); // Rarete, revisar y ver que esta pasando con la memoria
-	// Revisar tmb como queremos gestionar cada objeto cliente (el mismo objeto, con la misma dir. de memoria tanto en server como en channel?) 
+	// el mismo objeto, con la misma dir. de memoria tanto en server como en channel
 	
 	//_clients.insert(std::pair<int, Client>(id, Client(client_fd, id)));
 	id++;
@@ -111,48 +118,51 @@ void Server::handleClientMessage(struct pollfd& pfd) {
         }
 
         buffer[bytes_read] = '\0';
-		_clients[pfd.fd]->appendToBuffer(buffer);
-    	if (_clients[pfd.fd]->getBuffer().substr(_clients[pfd.fd]->getBuffer().size() - 2) == "\r\n") {
-			// TODO: Update to construct Message from Client, so we store: sender (client socket) 
-			// and receiver (channel name)
-			Message newMessage(_clients[pfd.fd]);
-			_clients[pfd.fd]->clearBuffer();
-			// Muy tocho, poner bonito.
-			switch (newMessage.getParsedCommand())
-			{
-				case IRC::CMD_CAP:
-					break;
-				case IRC::CMD_NICK:
-					break;
-				case IRC::CMD_PASS:
-					break;
-				case IRC::CMD_USER:
-					break;
-				case IRC::CMD_PRIVMSG:
-					break;
-				case IRC::CMD_JOIN:
-					break;
-				case IRC::CMD_INVITE:
-					break;
-				case IRC::CMD_TOPIC:
-					break;
-				case IRC::CMD_MODE:
-					break;
-				case IRC::CMD_KICK:
-					break;
-				case IRC::CMD_QUIT:
-					break;
-				default:
-					break;
+		unsigned int client_id = fetchClientIdFromPid(pfd.fd);
+		if (client_id > 0) {
+			_clients[client_id]->appendToBuffer(buffer);
+			if (_clients[client_id]->getBuffer().substr(_clients[client_id]->getBuffer().size() - 2) == "\r\n") {
+				// TODO: Update to construct Message from Client, so we store: sender (client socket) 
+				// and receiver (channel name)
+				Message newMessage(_clients[client_id]);
+				_clients[client_id]->clearBuffer();
+				// Muy tocho, poner bonito.
+				switch (newMessage.getParsedCommand())
+				{
+					case IRC::CMD_CAP:
+						break;
+					case IRC::CMD_NICK:
+						break;
+					case IRC::CMD_PASS:
+						break;
+					case IRC::CMD_USER:
+						break;
+					case IRC::CMD_PRIVMSG:
+						break;
+					case IRC::CMD_JOIN:
+						break;
+					case IRC::CMD_INVITE:
+						break;
+					case IRC::CMD_TOPIC:
+						break;
+					case IRC::CMD_MODE:
+						break;
+					case IRC::CMD_KICK:
+						break;
+					case IRC::CMD_QUIT:
+						break;
+					default:
+						break;
+					
+				}
+				// if (newMessage.process() == -1) {
+				// 	// gestionar
+				// }
+				// std::cout << "command :" << newMessage.getCommand() << std::endl; 
+				// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+				// std::cout << "params :" << newMessage.getParams() << std::endl; 
 				
 			}
-			// if (newMessage.process() == -1) {
-			// 	// gestionar
-			// }
-			// std::cout << "command :" << newMessage.getCommand() << std::endl; 
-			// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-			// std::cout << "params :" << newMessage.getParams() << std::endl; 
-			
 		}
 }
 
