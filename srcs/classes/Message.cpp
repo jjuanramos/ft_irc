@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:07:15 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/29 11:17:32 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 17:07:34 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
 
+std::map<std::string, IRC::CommandType> Message::_commandMap;
+
 Message::Message(const Client *client) {
 	_senderSocket = client->getSocket();
 	parse(client->getBuffer());
+    setCommandType();
 	setReceiver();
 }
 
@@ -23,7 +26,7 @@ Message::~Message(void) {}
 const std::string& Message::getPrefix() const { return _command._prefix; }
 const std::string& Message::getCommand() const { return _command._command; }
 const std::vector<std::string>& Message::getParams() const { return _command._params; }
-IRC::CommandType Message::getParsedCommand() const { return _parsedCommand; }
+IRC::CommandType Message::getCommandType() const { return _commandType; }
 
 void	Message::parse(const std::string& buffer) {
     std::string msg = buffer;
@@ -92,4 +95,30 @@ void	Message::setReceiver(void)
 		if (!(*it).empty() && (*it).at(0) == '#')
 			_receiverChannel = (*it);
 	}
+}
+
+void Message::initCommandMap() {
+    if (_commandMap.empty()) {
+        _commandMap.insert(std::make_pair("CAP", IRC::CMD_CAP));
+        _commandMap.insert(std::make_pair("PASS", IRC::CMD_PASS));
+        _commandMap.insert(std::make_pair("NICK", IRC::CMD_NICK));
+        _commandMap.insert(std::make_pair("USER", IRC::CMD_USER));
+        _commandMap.insert(std::make_pair("JOIN", IRC::CMD_JOIN));
+        _commandMap.insert(std::make_pair("PRIVMSG", IRC::CMD_PRIVMSG));
+        _commandMap.insert(std::make_pair("KICK", IRC::CMD_KICK));
+        _commandMap.insert(std::make_pair("INVITE", IRC::CMD_INVITE));
+        _commandMap.insert(std::make_pair("TOPIC", IRC::CMD_TOPIC));
+        _commandMap.insert(std::make_pair("MODE", IRC::CMD_MODE));
+        _commandMap.insert(std::make_pair("QUIT", IRC::CMD_QUIT));
+    }
+}
+
+void    Message::setCommandType(void) {
+    std::map<std::string, IRC::CommandType>::const_iterator it = _commandMap.find(_command._command);
+    if (it != _commandMap.end()) {
+        _commandType = it->second;
+    }
+    else {
+        _commandType = IRC::CMD_UNKNOWN;
+    }
 }

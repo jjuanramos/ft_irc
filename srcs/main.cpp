@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:08 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/25 10:40:16 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 16:38:41 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IRC.hpp"
+
+// to do carlos:
+/*
+Message::getParsedCommand()
+Gestion switch case 
+gestion CAP 
+
+*/
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {

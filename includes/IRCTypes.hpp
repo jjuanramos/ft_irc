@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCTypes.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 13:23:33 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/28 13:23:40 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 16:57:52 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ namespace IRC {
         // Comandos adicionales necesarios
         // CMD_PING,    // Mantener conexión viva
         // CMD_PONG,    // Respuesta a PING
-        CMD_QUIT     // Desconexión del servidor
+        CMD_QUIT,     // Desconexión del servidor
+
+        CMD_UNKNOWN // Just in case
     };
 
     // Modos de canal requeridos según el subject

@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 16:17:45 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:08:59 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,10 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 				Message newMessage(_clients[client_id]);
 				_clients[client_id]->clearBuffer();
 				// Muy tocho, poner bonito.
-				switch (newMessage.getParsedCommand())
+				switch (newMessage.getCommandType())
 				{
 					case IRC::CMD_CAP:
+						std::cout << "TEST" << std::endl;
 						break;
 					case IRC::CMD_NICK:
 						break;
@@ -155,12 +156,15 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						break;
 					
 				}
-				// if (newMessage.process() == -1) {
-				// 	// gestionar
-				// }
-				// std::cout << "command :" << newMessage.getCommand() << std::endl; 
-				// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-				// std::cout << "params :" << newMessage.getParams() << std::endl; 
+				std::cout << newMessage.getCommandType() << std::endl;
+				std::cout << "command :" << newMessage.getCommand() << std::endl; 
+				std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+				const std::vector<std::string> params = newMessage.getParams();
+				int i = 1;
+				for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end(); ++it) {
+					std::cout << "param" << i << ":" << *it << std::endl; 
+					i++;
+				}
 				
 			}
 		}
@@ -184,6 +188,7 @@ void Server::deleteClients() {
 
 void Server::start() {
 	std::vector<struct pollfd> pollfds;
+	Message::initCommandMap();
 	
 	struct pollfd server_pollfd = {_server_fd, POLLIN, 0};
 	pollfds.push_back(server_pollfd);

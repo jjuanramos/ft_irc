@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/11/29 11:19:39 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/13 17:08:21 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,17 @@ struct CommandData {
 class Message {
 private:
     CommandData			_command;
-	IRC::CommandType	_parsedCommand;
+	IRC::CommandType	_commandType;
+	static std::map<std::string, IRC::CommandType> _commandMap;
 	int					_senderSocket;
 	std::string			_receiverChannel;
 	
     // Message(void);
 	Message(const Message &toCopy);
 	Message &operator=(const Message &other);
-	void parse(const std::string& buffer);
+	void	parse(const std::string& buffer);
+	void	setReceiver(void);
+	void    setCommandType(void);
     
 public:
 	Message(const Client *client);
@@ -42,9 +45,9 @@ public:
     const std::string&		getPrefix() const;
     const std::string&		getCommand() const;
     const std::vector<std::string>& getParams() const;
-    IRC::CommandType		getParsedCommand() const;
+    IRC::CommandType		getCommandType() const;
+	static void    initCommandMap(void);
 
-	void					setReceiver();
 };
 
 #endif
