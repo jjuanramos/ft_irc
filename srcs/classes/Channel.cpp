@@ -6,7 +6,7 @@
 /*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:53:06 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:19:18 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/14 11:03:30 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,32 @@
 Channel::Channel(const std::string& name, Client* creator) : _name(name), _userLimit(0) { // Cambio getSocket() por getId(), expliación en Server.hpp
     _clients.insert(std::make_pair(creator->getId(), creator));
     _operators.insert(std::make_pair(creator->getId(), creator));
+}
+
+Channel::Channel(void) : _name(""), _userLimit(0) {
+}
+
+Channel::Channel(const Channel& other) : 
+    _name(other._name),
+    _topic(other._topic),
+    _password(other._password),
+    _modes(other._modes),
+    _clients(other._clients),
+    _operators(other._operators),
+    _userLimit(other._userLimit) {
+}
+
+Channel& Channel::operator=(const Channel& other) {
+    if (this != &other) {
+        _name = other._name;
+        _topic = other._topic;
+        _password = other._password;
+        _modes = other._modes;
+        _clients = other._clients;
+        _operators = other._operators;
+        _userLimit = other._userLimit;
+    }
+    return *this;
 }
 
 Channel::~Channel() {
