@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 17:08:59 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 12:14:46 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ Server::Server(void): _port(6667), _password("password") {
 
 Server::Server(int port, const std::string& password):
 	_port(port), _password(password) {
+		FD_ZERO(&_master_read);
+		FD_ZERO(&_master_write);
 		setUpServerSocket();
 }
 
@@ -102,6 +104,54 @@ void	Server::handleNewConnection(std::vector<struct pollfd> &pollfds) {
 	id++;
 		
 	std::cout << "Nueva conexión aceptada" << std::endl;
+	std::cout << "Cliente conectado con ID: " << client_fd << std::endl;
+	
+	Client* newClient = _clients[id - 1];
+	if (newClient) {
+		std::cout << "Cliente creado correctamente" << std::endl;
+		std::cout << "Estado de autenticación: " << (newClient->isAuthenticated() ? "true" : "false") << std::endl;
+	} else {
+		std::cout << "Error: Cliente no creado" << std::endl;
+	}
+
+	FD_SET(client_fd, &_master_read);
+	FD_SET(client_fd, &_master_write);
+}
+
+void Server::handleJoin(const Message& msg, Client* client) {
+    
+	std::cout << "handleJoin" << std::endl;
+	if (!client->isAuthenticated()) {
+		std::cout << "Error: cliente no autenticado" << std::endl;
+        // Enviar error: no autenticado
+        return;
+    }
+
+    const std::vector<std::string>& params = msg.getParams();
+    if (params.empty()) {
+		std::cout << "Error: parámetros insuficientes" << std::endl;
+        // Enviar error: parámetros insuficientes
+        return;
+    }
+
+    std::string channelName = params[0];
+    if (channelName[0] != '#') {
+		std::cout << "Error: nombre de canal inválido" << std::endl;
+        // Enviar error: nombre de canal inválido
+        return;
+    }
+
+    // Buscar o crear canal
+    if (_channels.find(channelName) == _channels.end()) {
+        _channels[channelName] = Channel(channelName, client);
+		std::cout << "Canal creado" << std::endl;
+    }
+
+    Channel& channel = _channels[channelName];
+    if (channel.addClient(client)) {
+        client->joinChannel(&channel);
+        channel.sendNames(client);
+    }
 }
 
 void Server::handleClientMessage(struct pollfd& pfd) {
@@ -119,6 +169,10 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 
         buffer[bytes_read] = '\0';
 		unsigned int client_id = fetchClientIdFromPid(pfd.fd);
+		if (client_id < 0 || client_id >= FD_SETSIZE) {
+			std::cout << "Error: client_id inválido: " << client_id << std::endl;
+			return;
+		}
 		if (client_id > 0) {
 			_clients[client_id]->appendToBuffer(buffer);
 			if (_clients[client_id]->getBuffer().substr(_clients[client_id]->getBuffer().size() - 2) == "\r\n") {
@@ -130,17 +184,49 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 				switch (newMessage.getCommandType())
 				{
 					case IRC::CMD_CAP:
-						std::cout << "TEST" << std::endl;
-						break;
-					case IRC::CMD_NICK:
+						std::cout << "Recibido CAP" << std::endl;
+						if (!newMessage.getParams().empty() && newMessage.getParams()[0] == "LS") {
+							// Para irssi, necesitamos responder con CAP LS vacío y luego END
+							std::string response = ":irc CAP * LS :\r\n";
+							int socket = _clients[client_id]->getSocket();
+							ssize_t sent = send(socket, response.c_str(), response.length(), 0);
+							std::cout << "Enviado [" << response << "], bytes: " << sent << std::endl;
+							
+							// El END debe ser inmediato
+							response = ":irc CAP * ACK\r\n";
+							sent = send(socket, response.c_str(), response.length(), 0);
+							std::cout << "Enviado [" << response << "], bytes: " << sent << std::endl;
+						}
+						else if (!newMessage.getParams().empty() && newMessage.getParams()[0] == "END") {
+							// Cuando recibimos CAP END, confirmamos que la negociación está completa
+							std::string response = ":irc CAP * ACK\r\n";
+							int socket = _clients[client_id]->getSocket();
+							send(socket, response.c_str(), response.length(), 0);
+						}
 						break;
 					case IRC::CMD_PASS:
+						std::cout << "Recibido PASS" << std::endl;
+						if (!newMessage.getParams().empty()) {
+							if (newMessage.getParams()[0] == _password) {
+								_clients[client_id]->setAuthenticated(true);
+								std::cout << "Password correcto, cliente autenticado" << std::endl;
+							} else {
+								std::string response = ":localhost 464 * :Password incorrect\r\n";
+								send(_clients[client_id]->getSocket(), response.c_str(), response.length(), 0);
+								std::cout << "Password incorrecto" << std::endl;
+							}
+						}
+						break;
+					case IRC::CMD_NICK:
+						std::cout << "Recibido NICK" << std::endl;
 						break;
 					case IRC::CMD_USER:
+						std::cout << "Recibido USER" << std::endl;
 						break;
 					case IRC::CMD_PRIVMSG:
 						break;
 					case IRC::CMD_JOIN:
+						handleJoin(newMessage, _clients[client_id]);
 						break;
 					case IRC::CMD_INVITE:
 						break;
@@ -156,7 +242,6 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						break;
 					
 				}
-				std::cout << newMessage.getCommandType() << std::endl;
 				std::cout << "command :" << newMessage.getCommand() << std::endl; 
 				std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
 				const std::vector<std::string> params = newMessage.getParams();
