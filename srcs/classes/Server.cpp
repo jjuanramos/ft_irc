@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 17:08:59 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:12:50 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,16 +127,20 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 				Message newMessage(_clients[client_id]);
 				_clients[client_id]->clearBuffer();
 				// Muy tocho, poner bonito.
-				switch (newMessage.getCommandType())
+				switch (newMessage.getCommandType()) // De momento la gestion de comandos se va a hacer con metodos dentro de Server. Si la clase Server se vuelve
+				// demasiado compleja, se puede modularizar esta gestion.
 				{
 					case IRC::CMD_CAP:
-						std::cout << "TEST" << std::endl;
+						handleCapCommand(newMessage);
 						break;
 					case IRC::CMD_NICK:
+						std::cout << "sending nick";
 						break;
 					case IRC::CMD_PASS:
+						std::cout << "sending pass";
 						break;
 					case IRC::CMD_USER:
+						std::cout << "sending user";
 						break;
 					case IRC::CMD_PRIVMSG:
 						break;
@@ -156,18 +160,40 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						break;
 					
 				}
-				std::cout << newMessage.getCommandType() << std::endl;
-				std::cout << "command :" << newMessage.getCommand() << std::endl; 
-				std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
-				const std::vector<std::string> params = newMessage.getParams();
-				int i = 1;
-				for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end(); ++it) {
-					std::cout << "param" << i << ":" << *it << std::endl; 
-					i++;
-				}
-				
+
+				// Algo raro, cuando comento/descomento esto de abajo cambian cosas, i.e. el servidor recibe o no recibe los comandos. weird
+
+				// std::cout << newMessage.getCommandType() << std::endl;
+				// std::cout << "command :" << newMessage.getCommand() << std::endl; 
+				// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
+				// const std::vector<std::string> params = newMessage.getParams();
+				// int i = 1;
+				// for (std::vector<std::string>::const_iterator it = params.begin(); it != params.end(); ++it) {
+				// 	std::cout << "param" << i << ":" << *it << std::endl; 
+				// 	i++;
+				// }
 			}
 		}
+}
+
+void Server::handleCapCommand(Message &message) {
+	// :<server_name> CAP <client_id> LS :
+	if (message.getParams()[0] == "LS") { // && message.getParams()[1] == "302" hace falta???
+		std::string response = ":" + SERVER_NAME + " CAP * LS :multi-prefix\r\n";
+		_clients[message.getSenderId()]->receiveMessage(response);
+	}
+	else if (message.getParams()[0] == "REQ") {
+		std::string response = ":" + SERVER_NAME + " CAP * ACK :" + message.getParams()[1] + "\r\n"; // Ahora mismo mandamos lo que pide Irssi, mirar si hay que implementarlos requerimientos diferente o que
+		_clients[message.getSenderId()]->receiveMessage(response);
+	}
+	else if (message.getParams()[0] == "END") {
+		std::cout << "Capability negotiation ended for client " << _clients[message.getSenderId()] << std::endl; // esta devolviendo el id en hex?
+		_clients[message.getSenderId()]->setCapNegotiationStatus(true);
+	}
+	else {
+		// checkear
+	}
+
 }
 
 void Server::deleteClients() {
@@ -203,7 +229,7 @@ void Server::start() {
 		for (size_t i = 0; i < pollfds.size(); i++) {
 			if (pollfds[i].revents & POLLIN) {
 				if (pollfds[i].fd == _server_fd) {
-					// Nueva conexión en el socket servidor
+					// Nueva conexión en el socket servidor // Nota; Seguro???? 
 					handleNewConnection(pollfds);
 				} else {
 					// Mensaje de un cliente existente

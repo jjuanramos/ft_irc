@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:08 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 16:38:41 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:20:33 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 // to do carlos:
 /*
-Message::getParsedCommand()
-Gestion switch case 
 gestion CAP 
+
+
+gestion de errores?
 
 */
 

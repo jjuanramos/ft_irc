@@ -11,7 +11,8 @@ private:
     std::string         _nickname;
     std::string         _username;
     std::string         _buffer;
-    bool                _authenticated;
+    bool                _capNegotiation; // ha mandado CAP END
+    bool                _authenticated; // ha seteado NICK y PASS
     unsigned int        _id;
     std::map<const std::string, Channel*> _channels;   // Canales a los que está unido
     std::map<const std::string, Channel*> _op_channels; // Canales donde es operador
@@ -32,6 +33,7 @@ public:
     std::string const   getNickname() const;
     std::string const   getUsername() const;
     bool                isAuthenticated() const;
+    bool                isCapNegotiationDone() const;
 	std::string const   getBuffer() const;
     unsigned int        getId() const;
     
@@ -39,6 +41,7 @@ public:
     void        setNickname(const std::string& nickname);
     void        setUsername(const std::string& username);
     void        setAuthenticated(bool status);
+    void        setCapNegotiationStatus(bool status);
 
     // Buffer para mensajes parciales
     void        appendToBuffer(const std::string& data);
@@ -54,7 +57,7 @@ public:
 
     // Comunicación básica
     bool        sendMessage(const std::string& message);
-    //bool        receiveMessage();
+    void        receiveMessage(const std::string &message);
 };
 
 #endif
