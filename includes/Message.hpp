@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:01:43 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/12/13 17:08:21 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:12:06 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ private:
 	IRC::CommandType	_commandType;
 	static std::map<std::string, IRC::CommandType> _commandMap;
 	int					_senderSocket;
+	unsigned int		_senderId;
 	std::string			_receiverChannel;
 	
     // Message(void);
@@ -46,6 +47,11 @@ public:
     const std::string&		getCommand() const;
     const std::vector<std::string>& getParams() const;
     IRC::CommandType		getCommandType() const;
+	int						getSenderSocket() const;
+	unsigned int			getSenderId() const;
+	std::string				getReceiverChannel() const;
+	
+	
 	static void    initCommandMap(void);
 
 };

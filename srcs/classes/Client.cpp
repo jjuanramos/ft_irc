@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 10:07:13 by juramos           #+#    #+#             */
-/*   Updated: 2024/11/29 11:41:08 by juramos          ###   ########.fr       */
+/*   Updated: 2024/12/14 18:39:29 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ unsigned int	Client::getId() const { return _id; }
 //
 bool	Client::isAuthenticated() const { return _authenticated; }
 
+bool    Client::isCapNegotiationDone() const { return _capNegotiation; }
+
 //
 
 void        Client::setNickname(const std::string& nickname) {
@@ -56,6 +58,10 @@ void        Client::setUsername(const std::string& username) {
 
 void        Client::setAuthenticated(bool status) {
 	_authenticated = status;
+}
+
+void		Client::setCapNegotiationStatus(bool status) {
+	_capNegotiation = status;
 }
 
 //
@@ -161,6 +167,20 @@ bool	Client::isOperator(const Channel *channel) const {
 bool	Client::sendMessage(const std::string& message) { // Basic implementation, review
 	std::cout << _nickname << ": " << message << std::endl;
 	return (true);
+}
+
+void	Client::receiveMessage(const std::string &message) {
+	ssize_t bytesSent = ::send(_socket, message.c_str(), message.size(), 0);
+
+	if (bytesSent < 0) {
+		std::cerr << "Error sending message to client" << _id << ": " << strerror(errno) << std::endl;
+	}
+	else if (static_cast<size_t>(bytesSent) < message.size()) {
+		std::cerr << "Partial send: Only" << bytesSent << " bytes sent to client" << _id << ": " << strerror(errno) << std::endl;
+	}
+	else {
+		std::cout << "Message sent to client" << _id << ": " << message;
+	}
 }
 
 //

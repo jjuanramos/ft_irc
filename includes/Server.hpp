@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 16:16:21 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:38:14 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #define SERVER_HPP
 
 #include "IRC.hpp"
+
+class Message;
 
 class Server {
 private:
@@ -38,6 +40,10 @@ public:
     void start();
     void deleteClients();
     unsigned int fetchClientIdFromPid(int fd);
+
+    // commands
+    void handleCapCommand(Message &message);
+    
 };
 
 #endif

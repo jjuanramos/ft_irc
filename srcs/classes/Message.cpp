@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 12:07:15 by cmunoz-g          #+#    #+#             */
-/*   Updated: 2024/12/13 17:07:34 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:39:00 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ std::map<std::string, IRC::CommandType> Message::_commandMap;
 
 Message::Message(const Client *client) {
 	_senderSocket = client->getSocket();
+    _senderId = client->getId();
 	parse(client->getBuffer());
     setCommandType();
 	setReceiver();
@@ -27,6 +28,9 @@ const std::string& Message::getPrefix() const { return _command._prefix; }
 const std::string& Message::getCommand() const { return _command._command; }
 const std::vector<std::string>& Message::getParams() const { return _command._params; }
 IRC::CommandType Message::getCommandType() const { return _commandType; }
+int Message::getSenderSocket() const { return _senderSocket; }
+unsigned int    Message::getSenderId() const { return _senderId; }
+std::string Message::getReceiverChannel() const { return _receiverChannel; }
 
 void	Message::parse(const std::string& buffer) {
     std::string msg = buffer;
