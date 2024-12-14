@@ -93,16 +93,16 @@ Juega con el servidor!
 ### Flujo de Trabajo Sugerido
 
 1. **Fase 1: Infraestructura Básica**
-   - Dev1: Implementación básica de Client y autenticación
-   - Dev2: Implementación básica de Channel y parsing de mensajes
+   - Carlos: Implementación básica de Client y autenticación
+   - Juan: Implementación básica de Channel y parsing de mensajes
 
 2. **Fase 2: Comandos Básicos**
-   - Dev1: PASS, NICK, USER
-   - Dev2: JOIN, PRIVMSG
+   - Carlos: PASS, NICK, USER
+   - Juan: JOIN, PRIVMSG
 
 3. **Fase 3: Funcionalidades Avanzadas**
-   - Dev1: Gestión de usuarios y respuestas
-   - Dev2: Modos de canal y comandos de operador
+   - Carlos: Gestión de usuarios y respuestas
+   - Juan: Modos de canal y comandos de operador
 
 4. **Fase 4: Integración y Testing**
    - Ambos: Testing con irssi
