@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/14 18:46:55 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:12:50 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +134,13 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						handleCapCommand(newMessage);
 						break;
 					case IRC::CMD_NICK:
+						std::cout << "sending nick";
 						break;
 					case IRC::CMD_PASS:
+						std::cout << "sending pass";
 						break;
 					case IRC::CMD_USER:
+						std::cout << "sending user";
 						break;
 					case IRC::CMD_PRIVMSG:
 						break;
@@ -157,6 +160,9 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						break;
 					
 				}
+
+				// Algo raro, cuando comento/descomento esto de abajo cambian cosas, i.e. el servidor recibe o no recibe los comandos. weird
+
 				// std::cout << newMessage.getCommandType() << std::endl;
 				// std::cout << "command :" << newMessage.getCommand() << std::endl; 
 				// std::cout << "prefix :" << newMessage.getPrefix() << std::endl; 
@@ -173,16 +179,15 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 void Server::handleCapCommand(Message &message) {
 	// :<server_name> CAP <client_id> LS :
 	if (message.getParams()[0] == "LS") { // && message.getParams()[1] == "302" hace falta???
-		std::ostringstream oss;
-		oss << message.getSenderId();
-		std::string response = ":" + SERVER_NAME + "CAP" + oss.str() + " LS :";
+		std::string response = ":" + SERVER_NAME + " CAP * LS :multi-prefix\r\n";
 		_clients[message.getSenderId()]->receiveMessage(response);
 	}
 	else if (message.getParams()[0] == "REQ") {
-		return ; // Mirar que es lo que requiere el cliente y como se puede implementar
+		std::string response = ":" + SERVER_NAME + " CAP * ACK :" + message.getParams()[1] + "\r\n"; // Ahora mismo mandamos lo que pide Irssi, mirar si hay que implementarlos requerimientos diferente o que
+		_clients[message.getSenderId()]->receiveMessage(response);
 	}
 	else if (message.getParams()[0] == "END") {
-		std::cout << "Capability negotiation ended for client " << _clients[message.getSenderId()] << std::endl;
+		std::cout << "Capability negotiation ended for client " << _clients[message.getSenderId()] << std::endl; // esta devolviendo el id en hex?
 		_clients[message.getSenderId()]->setCapNegotiationStatus(true);
 	}
 	else {
@@ -224,7 +229,7 @@ void Server::start() {
 		for (size_t i = 0; i < pollfds.size(); i++) {
 			if (pollfds[i].revents & POLLIN) {
 				if (pollfds[i].fd == _server_fd) {
-					// Nueva conexión en el socket servidor
+					// Nueva conexión en el socket servidor // Nota; Seguro???? 
 					handleNewConnection(pollfds);
 				} else {
 					// Mensaje de un cliente existente
