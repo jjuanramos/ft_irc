@@ -1,8 +1,29 @@
 # Table of Contents
-1. [TODO](#todo)
-2. [Flujos](#flujos)
+1. [Cómo testear](#cómo-testear)
+2. [TODO](#todo)
+3. [Flujos](#flujos)
 	1. [Flujo de Interacción](#flujo-de-interacción)
 	2. [Flujo de Creación de Canal](#flujo-de-creación-de-canal)
+
+
+## Cómo testear
+
+```bash
+make
+./ircserv 6667 password
+```
+
+En otra terminal, conectate con irssi:
+
+```bash
+irssi
+```
+Y conéctate al servidor:
+```bash
+/connect 127.0.0.1 6667
+```
+
+Juega con el servidor!
 
 ## TODO
 
