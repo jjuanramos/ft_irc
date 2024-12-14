@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRC.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juramos <juramos@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:38:54 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/13 15:59:58 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/14 11:55:54 by juramos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include <errno.h>
 #include <cstdlib>
 #include "Channel.hpp"
