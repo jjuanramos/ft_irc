@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:28:50 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/14 18:38:14 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:17:32 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,12 @@ public:
     void deleteClients();
     unsigned int fetchClientIdFromPid(int fd);
 
+    // checks
+    bool checkUniqueNick(std::string nick);
+
     // commands
     void handleCapCommand(Message &message);
+    void handleNickCommand(Message &message);
     
 };
 
