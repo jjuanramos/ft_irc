@@ -6,7 +6,7 @@
 /*   By: cmunoz-g <cmunoz-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:04:39 by juramos           #+#    #+#             */
-/*   Updated: 2024/12/14 19:12:50 by cmunoz-g         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:22:03 by cmunoz-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,9 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 						handleCapCommand(newMessage);
 						break;
 					case IRC::CMD_NICK:
-						std::cout << "sending nick";
+						handleNickCommand(newMessage);
 						break;
-					case IRC::CMD_PASS:
+					case IRC::CMD_PASS: // hay que revisar si tenemos que pedirle a irssi que mande PASS explicitamente
 						std::cout << "sending pass";
 						break;
 					case IRC::CMD_USER:
@@ -172,6 +172,8 @@ void Server::handleClientMessage(struct pollfd& pfd) {
 				// 	std::cout << "param" << i << ":" << *it << std::endl; 
 				// 	i++;
 				// }
+
+				std::cout << "" << std::endl;
 			}
 		}
 }
@@ -193,7 +195,41 @@ void Server::handleCapCommand(Message &message) {
 	else {
 		// checkear
 	}
+}
 
+/* 
+ 433     ERR_NICKNAMEINUSE
+                        "<nick> :Nickname is already in use"
+
+                - Returned when a NICK message is processed that results
+                  in an attempt to change to a currently existing
+                  nickname.
+*/
+
+void Server::handleNickCommand(Message &message) { // llega un unico param que es el nick
+	std::string nickname = message.getParams()[0];
+	// check if its unique, if so:
+	if (checkUniqueNick(nickname)) {
+	_clients[message.getSenderId()]->setNickname(nickname);
+	std::string response = ":" + SERVER_NAME + " 001 " + nickname + "\r\n";
+	_clients[message.getSenderId()]->receiveMessage(response);
+	} 
+	else {
+		std::string response = ":" + SERVER_NAME + " 433 " + nickname + " :Nickname is already in use\r\n";
+	}
+}
+
+// checks
+
+bool Server::checkUniqueNick(std::string nick) { // esto hay que testearlo
+	std::map<unsigned int, Client*>::iterator it = _clients.begin();
+
+	while (it != _clients.end()) {
+		if (it->second->getNickname() == nick)
+			return (false); // not unique
+		++it;
+	}
+	return (true);
 }
 
 void Server::deleteClients() {
